@@ -3,9 +3,15 @@
   margin: 0;
   box-sizing: border-box;
 }
+
 body {
   background: linear-gradient(to bottom, #0082c8, #00a0d2);
   font-family: 'Poppins', sans-serif;
+}
+
+p {
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .container {
@@ -54,9 +60,10 @@ body {
   margin-bottom: 1rem;
 }
 
-p {
-  font-weight: 400;
-  line-height: 1.5;
+.card p {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
 }
 
 @media screen and (max-width: 768px) {
