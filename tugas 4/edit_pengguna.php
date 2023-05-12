@@ -1,3 +1,55 @@
+<?php
+    require_once 'koneksi.php';
+
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+    
+        // Query untuk menampilkan data
+        $query = "SELECT * FROM users WHERE id='$id';";
+        
+        // Eksekusi query
+        $result = mysqli_query($conn, $query);
+
+        // Memasukkan data yang di query ke variabel row
+        $row = mysqli_fetch_assoc($result); 
+        
+        function update_users($conn){                
+            // Memasukkan tiap data ke dalam variabel
+            $name = $_POST['name'];
+            $email = $_POST['email'];
+            $role = $_POST['role'];
+            $phone = $_POST['phone'];
+            $address = $_POST['address'];
+            $password = $_POST['password'];            
+
+            $id = $_GET['id'];
+
+            // Query untuk menampilkan data
+            $query = "UPDATE users SET id = '$id', name = '$name', email = '$email', role = '$role', phone = '$phone', 
+                    address = '$address', password = '$password'
+                    WHERE id = '$id';";
+
+            // Eksekusi query
+            if (mysqli_query($conn, $query)) {
+                echo "<script>
+                        alert('Data berhasil diubah')
+                    </script>";
+                header ("refresh:0;data_pengguna.php");
+            } else {
+                echo 'Error: ' . mysqli_error($conn);
+            }        
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            update_users($conn);                
+        }
+    }
+
+    else {
+        echo "ID pengguna tidak ditemukan.";
+    }
+?>
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -9,20 +61,20 @@
     <body>
         <h2>Edit Pengguna</h2>
         <div class="container-fluid">
-            <form class="row g-3 needs-validation" novalidate>
+            <form method="POST" class="row g-3 needs-validation" novalidate>
                 <div class="col-md-12">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="<?= $row['name'] ?>" required>
                     <div class="valid-feedback">
                         Bagus.
                     </div>
                 </div>
                 <div class="col-md-6">
                     <label for="role" class="form-label">Role</label>
-                    <select class="form-select" id="role" required>
-                        <option selected disabled value="">Choose</option>
-                        <option>Admin</option>
-                        <option>Staff</option>
+                    <select class="form-select" id="role" name="role" required>
+                        <option value="<?= $row['role'] ?>"><?= $row['role'] ?></option>
+                        <option value="Admin">Admin</option>
+                        <option value="Staff">Staff</option>
                     </select>
                     <div class="invalid-feedback">
                         Pilih Role.
@@ -30,31 +82,29 @@
                 </div>
                 <div class="col-md-6">
                     <label for="inputPassword5" class="form-label">Password</label>
-                    <input type="password" id="inputPassword5" class="form-control" aria-labelledby="passwordHelpBlock" placeholder="Password" required>
+                    <input type="password" id="inputPassword5" name="password" class="form-control" aria-labelledby="passwordHelpBlock" placeholder="Password" value="<?= $row['password'] ?>" required>
                 </div>
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="<?= $row['email'] ?>" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="telp" class="form-label">Telp</label>
-                    <input type="tel" class="form-control" id="telp" name="telp" required>
+                    <label for="phone" class="form-label">Telp</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" value="<?= $row['phone'] ?>" required>
                 </div>
                 <div class="col-md-12">
                     <label for="address" class="form-label">Alamat Lengkap</label>
-                    <textarea class="form-control" id="address" rows="3" required></textarea>
+                    <textarea class="form-control" id="address" name="address" rows="3" required><?= $row['address'] ?></textarea>
                 </div>
                 <div class="col-md-12">
                     <label for="formFile" class="form-label">Unggah foto</label>
-                    <input class="form-control" type="file" id="formFile" required>
+                    <input class="form-control" type="file" id="formFile" name="avatar" required>
                 </div>
                 <div class="col-12 mt-4" >
-                    <button class="btn btn-warning" type="submit">Simpan</button>
+                    <input class="btn btn-warning" type="submit" value="Simpan Perubahan"></input>
                 </div>
             </form>
         </div>
-            
-        
         
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
         <script>

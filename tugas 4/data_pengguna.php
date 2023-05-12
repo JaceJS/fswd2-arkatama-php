@@ -39,8 +39,8 @@
                 <th scope="row"><?= $row['id'] ?></th>
                 <td>
                     <button type="button" class="btn btn-info btn-sm">Detail</button>
-                    <button type="button" class="btn btn-warning btn-sm">Edit</button>
-                    <a href="hapus_data.php?id=<?php echo $row['id']?>" class="btn btn-danger btn-sm">Hapus</a>
+                    <a href="edit_pengguna.php?id=<?php echo $row['id']?>" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="proses_hapus.php?id=<?php echo $row['id']?>" class="btn btn-danger btn-sm">Hapus</a>
                 </td>
                 <td><?= $row['avatar'] ?></td>
                 <td><?= $row['name'] ?></td>
