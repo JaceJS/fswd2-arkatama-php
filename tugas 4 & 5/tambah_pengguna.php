@@ -1,4 +1,13 @@
 <?php            
+    // memulai session
+    session_start();
+
+    // mengecek session
+    if(!isset($_SESSION['login'])){
+        header ("refresh:0;login.php");
+        exit();
+    }
+
     require_once 'koneksi.php';
 
     function insert_into_users($conn){                
@@ -66,7 +75,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Name@example.com" required>
                 </div>
                 <div class="col-md-6">
                     <label for="phone" class="form-label">Telp</label>
@@ -80,8 +89,9 @@
                     <label for="formFile" class="form-label" required>Unggah foto</label>
                     <input class="form-control" type="file" id="formFile" name="avatar">
                 </div>
-                <div class="col-12 mt-4" >
+                <div class="col-12 mt-4 d-flex justify-content-between">
                     <input class="btn btn-primary" type="submit" value="Simpan"></input>
+                    <a href="data_pengguna.php" class="btn btn-danger">Kembali</a>
                 </div>
             </form>
         </div>

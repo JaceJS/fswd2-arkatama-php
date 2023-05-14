@@ -1,44 +1,42 @@
 <?php
   // memulai session
-  SESSION_start();
+  session_start();
 
-  // menghubungkan ke database
-  require_once 'koneksi.php';
-
-  function get_users($conn, $email,$password){
-    // melakukan query untuk mendapatkan email dan password
-    $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-    $result = mysqli_query($conn, $query);
-
-    // mengembalikan data pengguna jika ditemukan, jika tidak mengembalikan null
-    if ($result) {
-      return mysqli_fetch_assoc($result);
-    } else {
-        return null;
-    }
+  // mengecek session
+  if(isset($_SESSION['login'])){
+    header ("refresh:0;data_pengguna.php");
+    exit;
   }
 
-  // jika tombol masuk ditekan
-  if(isset($_POST['masuk'])){
+  require_once 'koneksi.php';
 
-    // mengambil email dan password yang dimasukkan
+  if(isset($_POST['masuk'])){
+    // mengambil nilai email dan password yang diisi
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    get_users($conn, $email, $password);
-    
-    // Jika data pengguna ditemukan
-    if ($user != null) {
-      // Menyimpan data pengguna pada session
-      $_SESSION['user'] = $user;
+    $query = "SELECT * FROM users WHERE email = '$email';";
+    $result = mysqli_query($conn, $query);
 
-      // Redirect ke halaman utama
-      header ("refresh:0;data_pengguna.php");
+    // mengecek email
+    if(mysqli_num_rows($result) === 1) {
+      $row = mysqli_fetch_assoc($result);
+      // mengecek password
+      if($password == $row['password']){
+        $_SESSION['login'] = true;
+        header ("refresh:0;data_pengguna.php");
+        exit();
+      } else {
+        echo "<script>
+                    alert('Password salah')
+              </script>";
+      }
     } else {
-        // Jika data pengguna tidak ditemukan, menampilkan pesan error
-        $error = "Username atau password salah!";
+      echo "<script>
+                    alert('Email tidak valid')
+            </script>";
     }
-  }  
+  }
 ?>
 
 <!doctype html>
@@ -71,15 +69,11 @@
           <form method="POST">
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>        
+              <input type="email" class="form-control" id="email" name="email" placeholder="Name@example.com" required>        
             </div>
             <div class="mb-3">
               <label for="password" class="form-label">Password</label>
               <input type="password" id="inputPassword" name="password" class="form-control" aria-labelledby="passwordHelpBlock" placeholder="Password" required>
-            </div>
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label" for="exampleCheck1">Ingat Saya</label>
             </div>
             <input class="btn btn-primary mt-3" type="submit" value="Masuk" name="masuk"></input>
           </form>

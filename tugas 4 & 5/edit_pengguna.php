@@ -1,4 +1,13 @@
 <?php
+    // memulai session
+    session_start();
+
+    // mengecek session
+    if(!isset($_SESSION['login'])){
+        header ("refresh:0;login.php");
+        exit();
+    }
+
     require_once 'koneksi.php';
 
     if (isset($_GET['id'])) {
@@ -100,8 +109,9 @@
                     <label for="formFile" class="form-label">Unggah foto</label>
                     <input class="form-control" type="file" id="formFile" name="avatar" required>
                 </div>
-                <div class="col-12 mt-4" >
+                <div class="col-12 mt-4 d-flex justify-content-between" >
                     <input class="btn btn-warning" type="submit" value="Simpan Perubahan"></input>
+                    <a href="data_pengguna.php" class="btn btn-danger">Kembali</a>
                 </div>
             </form>
         </div>
