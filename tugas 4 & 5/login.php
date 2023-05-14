@@ -1,15 +1,12 @@
 <?php
   // memulai session
   session_start();
-
   // mengecek session
   if(isset($_SESSION['login'])){
     header ("refresh:0;data_pengguna.php");
-    exit;
+    exit();
   }
-
   require_once 'koneksi.php';
-
   if(isset($_POST['masuk'])){
     // mengambil nilai email dan password yang diisi
     $email = $_POST['email'];
@@ -17,7 +14,6 @@
 
     $query = "SELECT * FROM users WHERE email = '$email';";
     $result = mysqli_query($conn, $query);
-
     // mengecek email
     if(mysqli_num_rows($result) === 1) {
       $row = mysqli_fetch_assoc($result);
