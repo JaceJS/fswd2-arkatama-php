@@ -51,23 +51,27 @@
         </thead>
         <tbody>      
             <?php 
+                $i = 1;
                 // Mengambil nilai dari variabel result
                 while ($row = mysqli_fetch_assoc($result)) :
             ?>
             <tr>
-                <th scope="row"><?= $row['id'] ?></th>
+                <th scope="row"><?= $i ?></th>
                 <td>
                     <button type="button" class="btn btn-info btn-sm">Detail</button>
                     <a href="edit_pengguna.php?id=<?php echo $row['id']?>" class="btn btn-warning btn-sm">Edit</a>
                     <a href="proses_hapus.php?id=<?php echo $row['id']?>" class="btn btn-danger btn-sm">Hapus</a>
                 </td>
-                <td><?= $row['avatar'] ?></td>
+                <td><img src="assets/img/<?= $row['avatar'] ?>" alt="avatar" width="50" height="30"></td>
                 <td><?= $row['name'] ?></td>
                 <td><?= $row['email'] ?></td>
                 <td><?= $row['phone'] ?></td>
                 <td><?= $row['role'] ?></td>            
-            </tr>
-            <?php endwhile; ?>
+            </tr>            
+            <?php 
+                $i++;
+                endwhile; 
+            ?>
         </tbody>
     </table>
     </div>

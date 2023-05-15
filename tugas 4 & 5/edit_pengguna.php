@@ -26,7 +26,7 @@
             // Memasukkan tiap data ke dalam variabel
             $name = $_POST['name'];
             $email = $_POST['email'];
-            $role = $_POST['role'];
+            $role = $_POST['role'];            
             $phone = $_POST['phone'];
             $address = $_POST['address'];
             $password = $_POST['password'];            

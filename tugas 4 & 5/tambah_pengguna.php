@@ -18,10 +18,15 @@
         $phone = $_POST['phone'];
         $address = $_POST['address'];
         $password = $_POST['password'];
+        
+        $avatar = upload_avatar();
+        if(!$avatar){
+            return false;
+        }
 
         // Query untuk menampilkan data
-        $query = "INSERT INTO users (name, email, role, phone, address, password, created_at, updated_at)
-                VALUES ('$name', '$email', '$role', '$phone', '$address', '$password', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());";
+        $query = "INSERT INTO users (name, email, role, avatar, phone, address, password, created_at, updated_at)
+                VALUES ('$name', '$email', '$role', '$avatar', '$phone', '$address', '$password', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());";
         
         // Eksekusi query
         if (mysqli_query($conn, $query)) {
@@ -34,6 +39,49 @@
         }
     }
     
+    function upload_avatar(){
+        $namaFile = $_FILES['avatar']['name'];
+        $ukuranFile = $_FILES['avatar']['size'];
+        $error = $_FILES['avatar']['error'];
+        $tmpName = $_FILES['avatar']['tmp_name'];
+
+        if ($error == 4) {
+            echo "<script>
+                    alert('Tidak ada gambar yang diupload');
+                </script>";
+            return false;
+        }
+
+        // mengecek ekstensi file
+        $ekstensiValid = ['jpg', 'jpeg', 'png'];
+        $ekstensiGambar = explode('.', $namaFile);
+        $ekstensiGambar = strtolower(end($ekstensiGambar));
+        if(!in_array($ekstensiGambar, $ekstensiValid)){
+            echo "<script>
+                    alert('Ekstensi yang diterima (jpg, jpeg, png)');
+                </script>";
+            return false;
+        }
+
+        //cek ukuran file, harus kurang dari 1000000 byte (1 mb)
+        if($ukuranFile > 1000000){
+            echo "<script>
+                    alert('Ukuran gambar terlalu besar');
+                </script>";
+            return false;
+        }
+
+        // generate nama baru buat file
+        $namaFileBaru = uniqid();
+        $namaFileBaru .= '.';
+        $namaFileBaru .= $ekstensiGambar;
+
+        // direktori upload gambar
+        move_uploaded_file($tmpName, 'assets/img/'.$namaFile);
+
+        return $namaFile;
+    }
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         insert_into_users($conn);                
     }
@@ -50,7 +98,7 @@
     <body>
         <h2>Tambah Pengguna</h2>
         <div class="container-fluid">
-            <form method="POST" class="row g-3 needs-validation" novalidate>
+            <form method="POST" enctype="multipart/form-data" class="row g-3 needs-validation" novalidate>
                 <div class="col-md-12">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" id="name" name="name" required>
@@ -86,8 +134,8 @@
                     <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
                 </div>
                 <div class="col-md-12">
-                    <label for="formFile" class="form-label" required>Unggah foto</label>
-                    <input class="form-control" type="file" id="formFile" name="avatar">
+                    <label for="formFile" class="form-label">Unggah foto</label>
+                    <input class="form-control" type="file" id="formFile" name="avatar" required>
                 </div>
                 <div class="col-12 mt-4 d-flex justify-content-between">
                     <input class="btn btn-primary" type="submit" value="Simpan"></input>
